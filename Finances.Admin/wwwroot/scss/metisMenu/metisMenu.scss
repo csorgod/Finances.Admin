@@ -1,0 +1,144 @@
+*[dir="rtl"] .metismenu .arrow {
+    float: left;
+}
+*[dir="rtl"] .metismenu .plus-times {
+    float: left;
+}
+*[dir="rtl"] .metismenu .plus-minus {
+    float: left;
+}
+
+.metismenu{
+
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+
+    > li {
+        
+        @extend .p-b-5;
+        -webkit-box-flex: 1;
+        -ms-flex: 1 1 0%;
+        flex: 1 1 0%;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        position: relative;			
+
+        .active a {
+            font-weight: $font-weight-700;
+        }
+
+        i {
+            @extend .inlineblock;
+            @extend .m-r-10;
+            position: relative;
+            top: 1px;
+            width: 28px;    			
+            line-height: 28px;
+            background: rgba($white, 0.05);
+            @include border-radius(3px);
+            text-align: center;
+        }
+    }
+
+    li.header{
+        @extend .font-12;
+        @extend .m-t-20;
+        @extend .m-b-5;
+        color: rgba($white, 0.4);
+        padding: 0;
+    }
+
+    a {
+        @include transition(all .3s ease-out);
+        @include display-block;
+        @extend .font-15;
+        color: $gray-300;
+        border-radius: $border-radius-small;
+        position: relative;			
+        padding: 7px 0;
+        outline-width: 0;            
+    }
+
+    ul a {            
+        color: $gray-400;
+        font-size: $font-size;
+        padding: 6px 15px 6px 38px;
+        position: relative;			
+
+        &::before{
+            @include transition(all .4s ease-out);
+            @include border-radius(5px);
+            background: $gray-600;
+            content: '';
+            position: absolute;
+            left: 10px;
+            height: 5px;
+            width: 5px;
+            top: 14px;				
+        }
+        
+        &:hover{
+            &:before{
+                width: 15px;
+            }
+        }
+    }
+    
+    ul ul a {
+        padding: 10px 15px 10px 70px;
+    }
+
+    ul.collapse a {
+        &:hover,
+        &:focus {
+            text-decoration: none;
+        }
+    }		
+	
+    .arrow {
+        float: right;
+        line-height: 1.42857;
+    }
+
+    .collapse {
+        display: none;
+
+        &.in{
+            display: block;
+        }
+    }
+    .collapsing {
+        position: relative;
+        height: 0;
+        overflow: hidden;
+        transition-timing-function: ease;
+        transition-duration: .35s;
+        transition-property: height, visibility;
+    }
+    .has-arrow {
+        position: relative;
+
+        &:after {
+            @include transition(all .3s ease-out);
+            color: rgba($white, 0.2);
+            position: absolute;
+            content: '+';
+            right: 1em; 
+            line-height: 28px;           
+        }
+    }    
+}
+.metismenu .active > .has-arrow::after,
+.metismenu .has-arrow[aria-expanded="true"]::after {
+    content: '-';
+}

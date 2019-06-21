@@ -1,0 +1,124 @@
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Criar novo favorecido
+                    <small>Ao adicionar um novo favorecido, é possível cadastrar ele em suas transferências, acompanhar as transações e gerar relatórios baseado nos dados registrados.</small>
+                </h2>
+            </div>
+            <div class="body">
+                <form id="new-favored" asp-action="Create" asp-controller="Favored" method="post" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Name">Nome</label>
+                                <input type="text" name="Name" id="Name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="TaxNumber">CPF/CNPJ</label>
+                                <input type="text" name="TaxNumber" id="TaxNumber" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Account.Bank">Banco</label>
+                                <input type="number" maxlength="6" name="Account.Bank" id="Account.Bank" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Account.BankBranch">Agência</label>
+                                <input type="number" maxlength="4" name="Account.BankBranch" id="Account.BankBranch" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Account.BankAccount">Conta</label>
+                                <input type="number" maxlength="10" name="Account.BankAccount" id="Account.BankAccount" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Account.BankAccountDigit">Dígito da conta</label>
+                                <input type="number" maxlength="2" name="Account.BankAccountDigit" id="Account.BankAccountDigit" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Criar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script>
+    $(function() {
+        $('#new-favored').parsley();
+    });
+
+    $(document).ready(function() {
+
+        $error = '@ViewData["error"]';
+        $success = '@ViewData["success"]';
+
+        if($error != null && $error != ''){
+            $context = 'error';
+            $message = $error;
+            $position = 'top-center';
+
+            if ($context === '') {
+                $context = 'info';
+            }
+
+            if($message === ''){
+                $message = 'Tudo certo!';
+            }
+
+            if ($position === '') {
+                $positionClass = 'toast-bottom-right';
+            } else {
+                $positionClass = 'toast-' + $position;
+            }
+
+            toastr.remove();
+            toastr.options.closeButton = true;
+            toastr[$context]($message, '', {
+                positionClass: $positionClass
+            });
+            
+        } else if ($success != null && $success != ''){
+            $context = 'success';
+            $message = $success;
+            $position = 'top-center';
+
+            if ($context === '') {
+                $context = 'info';
+            }
+
+            if($message === ''){
+                $message = 'Tudo certo!';
+            }
+
+            if ($position === '') {
+                $positionClass = 'toast-bottom-right';
+            } else {
+                $positionClass = 'toast-' + $position;
+            }
+
+            toastr.remove();
+            toastr.options.closeButton = true;
+            toastr[$context]($message, '', {
+                positionClass: $positionClass
+            });
+        }
+    });
+    
+
+</script>
+}

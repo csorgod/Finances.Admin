@@ -1,0 +1,31 @@
+﻿<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <title>Finances</title>
+    @Html.Partial("../Partials/metas")
+    @Html.Partial("../Partials/links")
+</head>
+<body class="theme-orange">
+    <!-- Page Loader -->
+    @Html.Partial("../Partials/loader")
+    <!-- Theme Setting -->
+    @Html.Partial("../Partials/themesettings")
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <div id="wrapper">
+        @Html.Partial("../Partials/top-bar")
+        @Html.Partial("../Partials/chat-menu")
+        @Html.Partial("../Partials/main-menu")
+        <div id="main-content">
+            @Html.Partial("../Partials/breadcrumbs")
+            <div class="container-fluid">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <!-- Javascript -->
+    @Html.Partial("../Partials/scripts")
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

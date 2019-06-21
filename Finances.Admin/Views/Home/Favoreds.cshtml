@@ -1,0 +1,128 @@
+
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-text">Você está prestes a excluir o favorecido . Quer mesmo fazer isso?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-round btn-default" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-round btn-danger" id="confirmDelete">Excluir</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row clearfix">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="header">
+                <h2>Favorecidos 
+                    <small>
+                        Aqui você pode gerenciar seus favorecidos. Favorecidos são pessoas que você fez ou costuma fazer transferências e/ou pagamentos.
+                    </small>
+                </h2>
+                <ul class="header-dropdown dropdown">
+                    <li><a href="javascript:void(0);" class="full-screen"><i class="icon-frame"></i></a></li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:void(0);">Baixar .csv</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12" style="padding-bottom: 15px;">
+                        <a href="@Url.Action("New","Favored")" class="btn btn-success text-white">
+                            Novo Favorecido
+                        </a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    @if(ViewData["favoreds"] != null)
+                    {
+                        <p class="text-center">@ViewData["favoreds"]. Comece adicionando um no botão "Novo favorecido" localizado acima</p>
+                    } else
+                    {
+                        <table class="table table-hover js-basic-example dataTable table-custom spacing5">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF/CNPJ</th>
+                                    <th>Banco</th>
+                                    <th>Agência</th>
+                                    <th>Conta</th>
+                                    <th>Dígito</th>
+                                    <th>Cadastrado em</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>CPF/CNPJ</th>
+                                    <th>Banco</th>
+                                    <th>Agência</th>
+                                    <th>Conta</th>
+                                    <th>Dígito</th>
+                                    <th>Cadastrado em</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @foreach(var vm in Model.Favoreds)
+                                {
+                                <tr>
+                                    <td style="display:none;">@vm.Id</td>
+                                    <td>@vm.Name</td>
+                                    <td>@vm.TaxNumber</td>
+                                    <td>@vm.Account.Bank</td>
+                                    <td>@vm.Account.BankBranch</td>
+                                    <td>@vm.Account.BankAccount</td>
+                                    <td>@vm.Account.BankAccountDigit</td>
+                                    <td>@(vm.CreatedAt == DateTime.MinValue 
+                                        ? "--" 
+                                        : vm.CreatedAt
+                                        .ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)
+                                        .Split(' ')[0])
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Edit","Favored", new { @vm.Id })" class="btn btn-sm btn-default" title="Editar" data-toggle="tooltip" data-placement="top">
+                                            <i class="icon-pencil"></i>
+                                        </a>
+                                        <a href="@Url.Action("Show","Favored", new { @vm.Id })" class="btn btn-sm btn-default" title="Visualizar" data-toggle="tooltip" data-placement="top">
+                                            <i class="icon-eye"></i>
+                                        </a>
+                                        <button onclick="deleteFavored('@vm.Id', '@vm.Name')" class="btn btn-sm btn-default " title="Excluir" data-toggle="modal" data-target="#deleteConfirmationModal">
+                                            <i class="icon-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+
+@section Scripts {
+
+    <script>
+        function deleteFavored(favoredId, name) {
+            $('#modal-title').html('Atenção!');
+            $("#confirmDelete").attr("href", "/Favored/Delete/" + favoredId);
+            $('#modal-text').html('Você está prestes a excluir o favorecido "' + name + '". Quer mesmo fazer isso?');
+        }
+    </script>
+}

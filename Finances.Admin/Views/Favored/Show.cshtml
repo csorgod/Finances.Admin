@@ -1,0 +1,60 @@
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    Favorecido @Model.Favored.Name
+                    <small></small>
+                </h2>
+            </div>
+            <div class="body">
+                <form novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Name">Nome</label>
+                                <input type="text" name="Name" id="Name" class="form-control" value="@Model.Favored.Name" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="TaxNumber">CPF/CNPJ</label>
+                                <input type="text" name="TaxNumber" id="TaxNumber" class="form-control" value="@Model.Favored.TaxNumber" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Account.Bank">Banco</label>
+                                <input type="number" maxlength="6" name="Account.Bank" id="Account.Bank" class="form-control" value="@Model.Favored.Account.Bank" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Account.BankBranch">Agência</label>
+                                <input type="number" maxlength="4" name="Account.BankBranch" id="Account.BankBranch" class="form-control" value="@Model.Favored.Account.BankBranch" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Account.BankAccount">Conta</label>
+                                <input type="number" maxlength="10" name="Account.BankAccount" id="Account.BankAccount" class="form-control" value="@Model.Favored.Account.BankAccount" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Account.BankAccountDigit">Dígito da conta</label>
+                                <input type="number" maxlength="2" name="Account.BankAccountDigit" id="Account.BankAccountDigit" class="form-control" value="@Model.Favored.Account.BankAccountDigit" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <br>
+                <a href="@Url.Action("Edit","Favored", new { @Model.Favored.Id })" class="btn btn-sm btn-default" title="Editar" data-toggle="tooltip" data-placement="top">
+                    <i class="icon-pencil"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

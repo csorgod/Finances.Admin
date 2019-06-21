@@ -1,0 +1,187 @@
+<div class="row clearfix">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h2>Criar nova renda
+                    <small>
+                        As rendas podem ser customizadas em @Enum.GetNames(typeof(Finances.Common.Data.Enum.IncomeType)).Length tipos: <br><br>
+                        <ul>
+                            <li>Fixas são rendas que não variam de valor nem frequencia. Para esse tipo, você poderá escolher uma frequencia de recebimento e ela será somada automaticamente ao início do intervalo.</li>
+                            <li>Variáveis são rendas indefinidas, que podem variar completamente. Para esse tipo, será pedido uma atualização do valor 1 vez por mês.</li>
+                            <li>Avulsas são rendas extras, geralmente de freelances ou premiações. Essas rendas são cadastradas a cada ocorrencia.</li>
+                        </ul>
+                    </small>
+                </h2>
+            </div>
+            <div class="body">
+                <form id="new-incoming" asp-action="Create" asp-controller="Incoming" method="post" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Name">Nome</label>
+                                <input type="text" name="Name" id="Name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Description">Descrição</label>
+                                <textarea rows="2" name="Description" id="Description" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Value">Valor</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">R$</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="Value" id="Value" aria-label="Valor" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="IncomeType">Tipo de renda</label>
+                                <div class="input-group mb-3">
+                                    <select class="custom-select" id="IncomeType" name="IncomeType" required>
+                                        <option value="-1" selected>Escolha uma...</option>
+                                        @foreach(Finances.Common.Data.Enum.IncomeType income in Enum.GetValues(typeof(Finances.Common.Data.Enum.IncomeType)))
+                                        {
+                                            <option value="@((int)income)">
+                                                @(income.ToString() == "Fix" ? "Fixa" : income.ToString() == "variable" ? "Variavel" : "Avulsa")
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="FixDiv" style="display: none">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ReceiveAt">Recebimento em</label>
+                                <input data-provide="datepicker" data-date-autoclose="true" name="ReceiveAt" id="ReceiveAt" class="form-control" data-date-format="dd/mm/yyyy">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Recurrent">Recorrente?</label>
+                                <br />
+                                <label class="fancy-radio">
+                                    <input type="radio" id="Recurrent" name="Recurrent" value="True" required data-parsley-errors-container="#error-radio">
+                                    <span><i></i>Sim</span>
+                                </label>
+                                <label class="fancy-radio">
+                                    <input type="radio" id="Recurrent" name="Recurrent" value="False">
+                                    <span><i></i>Não</span>
+                                </label>
+                                <p id="error-radio"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="VariableDiv" style="display: none">
+                        ## Nada aqui ainda ##
+                    </div>
+                    <div class="row" id="DetachedDiv" style="display: none">
+                        ## Nada aqui ainda ##
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Criar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script>
+    $(function() {
+        $('#new-incoming').parsley();
+        $('#Value').maskMoney({thousands:'.', decimal:','});
+    });
+
+    $(document).ready(function() {
+
+        $error = '@ViewData["error"]';
+        $success = '@ViewData["success"]';
+
+        if($error != null && $error != ''){
+            $context = 'error';
+            $message = $error;
+            $position = 'top-center';
+
+            if ($context === '') {
+                $context = 'info';
+            }
+
+            if($message === ''){
+                $message = 'Tudo certo!';
+            }
+
+            if ($position === '') {
+                $positionClass = 'toast-bottom-right';
+            } else {
+                $positionClass = 'toast-' + $position;
+            }
+
+            toastr.remove();
+            toastr.options.closeButton = true;
+            toastr[$context]($message, '', {
+                positionClass: $positionClass
+            });
+            
+        } else if ($success != null && $success != ''){
+            $context = 'success';
+            $message = $success;
+            $position = 'top-center';
+
+            if ($context === '') {
+                $context = 'info';
+            }
+
+            if($message === ''){
+                $message = 'Tudo certo!';
+            }
+
+            if ($position === '') {
+                $positionClass = 'toast-bottom-right';
+            } else {
+                $positionClass = 'toast-' + $position;
+            }
+
+            toastr.remove();
+            toastr.options.closeButton = true;
+            toastr[$context]($message, '', {
+                positionClass: $positionClass
+            });
+        }
+
+        $('select').on('change', function(e) {
+            if(this.value == -1){
+                $('#FixDiv').slideUp();
+                $('#VariableDiv').slideUp();
+                $('#DetachedDiv').slideUp();
+            } else if(this.value == 0){
+                e.preventDefault();
+                $('#FixDiv').slideDown();
+                $('#VariableDiv').slideUp();
+                $('#DetachedDiv').slideUp();
+            } else if (this.value == 1){
+                e.preventDefault();
+                $('#FixDiv').slideUp();
+                $('#VariableDiv').slideDown();
+                $('#DetachedDiv').slideUp();
+            } else {
+                e.preventDefault();
+                $('#FixDiv').slideUp();
+                $('#VariableDiv').slideUp();
+                $('#DetachedDiv').slideDown();
+            }
+        });
+    });
+    
+
+</script>
+}
