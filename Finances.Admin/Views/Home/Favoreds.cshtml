@@ -124,5 +124,37 @@
             $("#confirmDelete").attr("href", "/Favored/Delete/" + favoredId);
             $('#modal-text').html('Você está prestes a excluir o favorecido "' + name + '". Quer mesmo fazer isso?');
         }
+
+        $(document).ready(function () {
+
+            $error = '@ViewData["error"]';
+            $success = '@ViewData["success"]';
+
+            if($error != null && $error != ''){
+                $context = 'error';
+                $message = $error;
+                $position = 'top-center';
+
+                if ($context === '') {
+                    $context = 'info';
+                }
+
+                if($message === ''){
+                    $message = 'Tudo certo!';
+                }
+
+                if ($position === '') {
+                    $positionClass = 'toast-bottom-right';
+                } else {
+                    $positionClass = 'toast-' + $position;
+                }
+
+                toastr.remove();
+                toastr.options.closeButton = true;
+                toastr[$context]($message, '', {
+                    positionClass: $positionClass
+                });
+            }
+        });
     </script>
 }

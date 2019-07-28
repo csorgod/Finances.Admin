@@ -34,9 +34,10 @@ namespace Finances.Admin.Controllers
                 return RedirectToAction("New");
             }
 
+            newFavored.BelongToUserId = Guid.Parse(UserLogged.Id);
             newFavored.CreatedAt = DateTime.Now;
 
-            var resp = await Http.Post<FavoredViewModel>("favoreds/create", newFavored);
+            var resp = await Http.Post<FavoredViewModel>("favored", newFavored);
 
             if (resp.Success)
             {

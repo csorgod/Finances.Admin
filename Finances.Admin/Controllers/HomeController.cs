@@ -27,7 +27,7 @@ namespace Finances.Admin.Controllers
             string[] breadcrumb = { "Favorecidos" };
             ViewData["breadcrumb"] = breadcrumb;
 
-            if (ViewData["success"] != null)
+            if (TempData["success"] != null)
                 ViewData["success"] = ViewData["success"];
 
             var favoreds = new JsonDefaultResponse<List<FavoredViewModel>>();

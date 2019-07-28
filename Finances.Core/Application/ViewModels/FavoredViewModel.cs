@@ -7,7 +7,9 @@ namespace Finances.Core.Application.ViewModels
         public string Id { get; set; }
         
         public string Name { get; set; }
-        
+
+        public Guid BelongToUserId { get; set; }
+
         public string TaxNumber { get; set; }
         
         public DateTime CreatedAt { get; set; }
