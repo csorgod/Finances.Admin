@@ -3,8 +3,12 @@ using Finances.Core.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static Finances.Common.Data.Enum;
+using RestEase;
 
 namespace Finances.Admin.Controllers
 {
@@ -27,28 +31,34 @@ namespace Finances.Admin.Controllers
             if (!ModelState.IsValid)
                 return View("Index", model);
 
-            model.LoginMode = LoginMode.Admin;
+            IFinancesApi api = RestClient.For<IFinancesApi>("http://localhost:44358");
+            UserAuthViewModel resp = await api.Login(model);
+            
+            Storage.Store("UserJwt", resp.Payload.JwtToken);
+            Storage.Store("UserLogged", JsonConvert.SerializeObject(resp.Payload.User));
 
-            var userAuth = new JsonDefaultResponse<UserAuthViewModel>();
+            // model.LoginMode = LoginMode.Admin;
 
-            try
-            {
-                userAuth = await Http.Post<UserAuthViewModel>("auth/login", model);
-            }
-            catch
-            {
-                TempData["error"] = "Houve uma falha no login. Por favor, tente novamente mais tarde";
-                return RedirectToAction("Index", "Auth");
-            }
+            // var userAuth = new JsonDefaultResponse<UserAuthViewModel>();
 
-            if (userAuth.Payload == null)
-            {
-                TempData["error"] = "Usuário e/ou senha incorretos";
-                return RedirectToAction("Index", "Auth");
-            }
-            Storage.Store("UserJwt", userAuth.Payload.JwtToken);
+            // try
+            // {
+            //     var loginRequest = new StringContent(model.ToString(), Encoding.UTF8, "application/json");
+            //     // var loginRequest = JsonConvert.SerializeObject(model);
+            //     userAuth = await Http.Post<UserAuthViewModel>("auth/login", loginRequest);
+            // }
+            // catch
+            // {
+            //     System.Console.WriteLine("\nFALIOU");
+            //     TempData["error"] = "Houve uma falha no login. Por favor, tente novamente mais tarde";
+            //     return RedirectToAction("Index", "Auth");
+            // }
 
-            Storage.Store("UserLogged", JsonConvert.SerializeObject(userAuth.Payload.User));
+            // if (userAuth.Payload == null)
+            // {
+            //     TempData["error"] = "Usuário e/ou senha incorretos";
+            //     return RedirectToAction("Index", "Auth");
+            // }
 
             return RedirectToAction("Index", "Home");
         }

@@ -4,10 +4,7 @@ namespace Finances.Core.Application.ViewModels
 {
     public class LoginInfoViewModel
     {
-        public string username { get; set; }
-
-        public string password { get; set; }
-
-        public LoginMode LoginMode { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }
