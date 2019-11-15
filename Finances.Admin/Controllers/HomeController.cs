@@ -3,6 +3,7 @@ using Finances.Core.Application.ViewDatas;
 using Finances.Core.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -16,10 +17,15 @@ namespace Finances.Admin.Controllers
         public IActionResult Index()
         {
             string[] breadcrumb = { "Dashboard" };
-
             ViewData["breadcrumb"] = breadcrumb;
 
-            return View(new BaseViewData(UserLogged));
+            if (TempData["error"] != null)
+                ViewData["error"] = TempData["error"];
+
+            if (TempData["success"] != null)
+                ViewData["success"] = TempData["success"];
+
+            return View("Index", new BaseViewData(UserLogged));
         }
 
         public async Task<IActionResult> Favoreds()
@@ -36,15 +42,16 @@ namespace Finances.Admin.Controllers
             {
                 favoreds = await Http.Get<List<FavoredViewModel>>("Favored/ByUserId");
             }
-            catch
+            catch (Exception ex)
             {
-
+                TempData["error"] = ex.Message;
+                return Index();
             }
 
             if (favoreds.Payload == null)
             {
                 favoreds.Payload = new List<FavoredViewModel>();
-                ViewData["favoreds"] = favoreds.Message;
+                TempData["favoreds"] = favoreds.Message;
             }
 
             return View(new FavoredViewData(UserLogged, favoreds.Payload));

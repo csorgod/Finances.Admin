@@ -41,7 +41,7 @@ namespace Finances.Admin.Controllers
                 TempData["success"] = resp.Message;
                 return RedirectToAction("Incomings", "Home");
             }
-            TempData["error"] = resp.Message;
+            TempData["error"] = resp.Error;
             return RedirectToAction("New");
         }
     }

@@ -44,7 +44,7 @@ namespace Finances.Admin.Controllers
                 TempData["success"] = resp.Message;
                 return RedirectToAction("Favoreds", "Home");
             }
-            TempData["error"] = resp.Message;
+            TempData["error"] = resp.Error;
             return RedirectToAction("New");
         }
 
@@ -69,7 +69,7 @@ namespace Finances.Admin.Controllers
 
                 if (!resp.Success)
                 {
-                    ViewData["error"] = "Houve um erro ao encontrar o Favorecido: " + resp.Message;
+                    ViewData["error"] = "Houve um erro ao encontrar o Favorecido: " + resp.Error;
                     return RedirectToAction("Favoreds", "Home");
                 }
 
@@ -100,7 +100,7 @@ namespace Finances.Admin.Controllers
                     return RedirectToAction("Favoreds", "Home");
                 }
 
-                TempData["error"] = fav.Message;
+                TempData["error"] = fav.Error;
                 return RedirectToAction("Edit", favored.Id);
             }
             catch (Exception ex)
@@ -127,7 +127,7 @@ namespace Finances.Admin.Controllers
             }
             else
             {
-                ViewData["error"] = "Houve um erro ao excluir o Favorecido: " + resp.Message;
+                ViewData["error"] = "Houve um erro ao excluir o Favorecido: " + resp.Error;
                 return RedirectToAction("Favoreds", "Home");
             }
         }

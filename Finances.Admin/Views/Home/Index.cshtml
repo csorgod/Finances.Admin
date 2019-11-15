@@ -27,7 +27,7 @@
             <div class="col-lg-6 col-md-6">
                 <div class="card-wrapper flip-left">
                     <div class="card s-widget-top">
-                        <div class="front p-3 px-4 bg-danger text-light"> 
+                        <div class="front p-3 px-4 bg-danger text-light">
                             <div>Contas liquidadas</div>
                             <div class="py-4 m-0 text-center h2">25 de 30</div>
                             <div class="d-flex">
@@ -46,7 +46,8 @@
             <div class="col-lg-6 col-md-6">
                 <div class="card-wrapper flip-left">
                     <div class="card s-widget-top">
-                        <div class="front p-3 px-4 bg-warning text-light"> <!-- mudar background de acordo com o valor -->
+                        <div class="front p-3 px-4 bg-warning text-light">
+                            <!-- mudar background de acordo com o valor -->
                             <div>Fatura do cartão final 9379</div>
                             <div class="py-4 m-0 text-center h2">R$2.232,20</div>
                             <div class="d-flex">
@@ -81,7 +82,7 @@
             </div>
 
         </div>
-    </div>                
+    </div>
     <div class="col-lg-3 col-md-6 col-sm-12">
         <div class="card">
             <div class="body">
@@ -129,7 +130,7 @@
         <div class="card">
             <div class="body">
                 <div class="row text-center">
-                    
+
                     <div class="col-lg-12 col-md-5">
                         <div class="text-center">
                             <input type="text" class="knob" value="77" data-width="68" data-height="68" data-thickness="0.1" data-bgColor="#383b40" data-fgColor="#17C2D7">
@@ -154,5 +155,41 @@
             </div>
         </div>
     </div>
-
 </div>
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+
+            $error = '@ViewData["error"]';
+            $success = '@ViewData["success"]';
+
+            if($error != null && $error != ''){
+                $context = 'error';
+                $message = $error;
+                $position = 'top-center';
+
+                if ($context === '') {
+                    $context = 'info';
+                }
+
+                if($message === ''){
+                    $message = 'Tudo certo!';
+                }
+
+                if ($position === '') {
+                    $positionClass = 'toast-bottom-right';
+                } else {
+                    $positionClass = 'toast-' + $position;
+                }
+
+                toastr.remove();
+                toastr.options.closeButton = true;
+                toastr[$context]($message, '', {
+                    positionClass: $positionClass
+                });
+            }
+        });
+    </script>
+}

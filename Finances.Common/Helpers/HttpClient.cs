@@ -17,6 +17,7 @@ namespace Finances.Common.Helpers
         private LocalStorage Storage;
         private AppSettings AppSettings;
         private readonly HttpClientNative client;
+        private readonly string ContentType = "application/json";
 
         public HttpClient(IOptions<AppSettings> appSettings)
         {
@@ -33,7 +34,8 @@ namespace Finances.Common.Helpers
             client.DefaultRequestHeaders.Accept.Clear();
             client.BaseAddress = new Uri(baseUrl);
             client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(ContentType));
+
             if (Storage.Keys().Count > 0)
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Storage.Get<string>("UserJwt"));
         }
@@ -41,9 +43,7 @@ namespace Finances.Common.Helpers
         public async Task<JsonDefaultResponse<T>> Get<T>(string endpoint)
         {
             string response = await client.GetStringAsync(endpoint);
-
-            var a = JsonConvert.DeserializeObject<JsonDefaultResponse<T>>(response);
-            return a;
+            return JsonConvert.DeserializeObject<JsonDefaultResponse<T>>(response);
         }
 
         public async Task<JsonDefaultResponse<T>> Delete<T>(string endpoint)
@@ -55,30 +55,51 @@ namespace Finances.Common.Helpers
 
         public async Task<JsonDefaultResponse<T>> Post<T>(string endpoint, object content)
         {
-            StringContent stringContent = new StringContent(JsonTransformer.Serialize(content), Encoding.UTF8, "application/json");
+            StringContent stringContent = new StringContent(JsonTransformer.Serialize(content), Encoding.UTF8, ContentType);
             HttpResponseMessage request = await client.PostAsync(endpoint, stringContent);
-            string response = request.Content.ReadAsStringAsync().Result;
-            return JsonTransformer.Deserialize<JsonDefaultResponse<T>>(response);
+            return ReadAndReturn<T>(request);
         }
 
         public async Task<JsonDefaultResponse<T>> Put<T>(string endpoint, object content)
         {
-            StringContent stringContent = new StringContent(JsonTransformer.Serialize(content), Encoding.UTF8, "application/json");
+            StringContent stringContent = new StringContent(JsonTransformer.Serialize(content), Encoding.UTF8, ContentType);
             HttpResponseMessage request = await client.PutAsync(endpoint, stringContent);
-            string response = request.Content.ReadAsStringAsync().Result;
-            return JsonTransformer.Deserialize<JsonDefaultResponse<T>>(response);
+            return ReadAndReturn<T>(request);
         }
 
         public async Task<JsonDefaultResponse<T>> Patch<T>(string endpoint, object content)
         {
-            StringContent stringContent = new StringContent(JsonTransformer.Serialize(content), Encoding.UTF8, "application/json");
+            StringContent stringContent = new StringContent(JsonTransformer.Serialize(content), Encoding.UTF8, ContentType);
             HttpRequestMessage requestContent = new HttpRequestMessage(new HttpMethod("PATCH"), endpoint)
             {
                 Content = stringContent
             };
             HttpResponseMessage request = await client.SendAsync(requestContent);
-            string response = request.Content.ReadAsStringAsync().Result;
-            return JsonTransformer.Deserialize<JsonDefaultResponse<T>>(response);
+            return ReadAndReturn<T>(request);
+        }
+
+        private JsonDefaultResponse<T> ReadAndReturn<T>(HttpResponseMessage request)
+        {
+            try
+            {
+                var response = request.Content.ReadAsStringAsync().Result;
+                if(string.IsNullOrEmpty(response))
+                    return new JsonDefaultResponse<T>
+                    {
+                        Success = false,
+                        Error = "Houve um erro ao receber uma resposta do servidor. Por favor, tente novamente mais tarde"
+                    };
+
+                return JsonTransformer.Deserialize<JsonDefaultResponse<T>>(response);
+            }
+            catch (Exception ex)
+            {
+                return new JsonDefaultResponse<T>
+                {
+                    Success = false,
+                    Error = ex.Message
+                };
+            }
         }
     }
 }

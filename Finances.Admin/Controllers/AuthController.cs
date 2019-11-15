@@ -3,6 +3,7 @@ using Finances.Core.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 using static Finances.Common.Data.Enum;
 
@@ -18,7 +19,7 @@ namespace Finances.Admin.Controllers
             if (TempData["error"] != null)
                 ViewData["error"] = TempData["error"];
 
-            return View();
+            return View("Index");
         }
 
         [HttpPost]
@@ -35,19 +36,19 @@ namespace Finances.Admin.Controllers
             {
                 userAuth = await Http.Post<UserAuthViewModel>("auth/login", model);
             }
-            catch
+            catch (Exception ex)
             {
                 TempData["error"] = "Houve uma falha no login. Por favor, tente novamente mais tarde";
-                return RedirectToAction("Index", "Auth");
+                return Index();
             }
 
             if (userAuth.Payload == null)
             {
                 TempData["error"] = "Usuário e/ou senha incorretos";
-                return RedirectToAction("Index", "Auth");
+                return Index();
             }
-            Storage.Store("UserJwt", userAuth.Payload.JwtToken);
 
+            Storage.Store("UserJwt", userAuth.Payload.JwtToken);
             Storage.Store("UserLogged", JsonConvert.SerializeObject(userAuth.Payload.User));
 
             return RedirectToAction("Index", "Home");
