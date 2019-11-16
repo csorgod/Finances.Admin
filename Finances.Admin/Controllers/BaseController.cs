@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using RestEase;
 
 namespace Finances.Admin.Controllers
 {
@@ -16,6 +17,7 @@ namespace Finances.Admin.Controllers
         protected string Error;
         protected string Success;
         public IOptions<AppSettings> AppSettings;
+        protected IFinancesApi FinancesApi { get; set; } = RestClient.For<IFinancesApi>("http://localhost:44358");
 
         public BaseController(IOptions<AppSettings> appSettings)
         {
