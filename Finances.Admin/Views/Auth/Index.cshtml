@@ -44,8 +44,8 @@
                         </div>
                         <button type="submit" class="btn btn-primary btn-round btn-block">LOGIN</button>
                         <div class="bottom">
-                            <span class="helper-text m-b-10"><i class="fa fa-lock"></i> <a href="page-forgot-password.html">Esqueceu a senha?</a></span>
-                            <span>Não possui conta? <a href="">Registrar</a></span>
+                            <span class="helper-text m-b-10"><i class="fa fa-lock"></i> <a href="@Url.Action("ForgotPassword", "Auth")">Esqueceu a senha?</a></span>
+                            <span>Não possui conta? <a href="@Url.Action("SignUp", "Auth")">Registrar</a></span>
                         </div>
                     </form>
                 </div>
@@ -55,13 +55,11 @@
     </div>
     <!-- END WRAPPER -->
 
-    <script src="../bundles/libscripts.bundle.js"></script>
-    <script src="../bundles/vendorscripts.bundle.js"></script>
-    <script src="../bundles/mainscripts.bundle.js"></script>
-    <script src="../vendor/parsleyjs/js/parsley.min.js"></script>
-    <script src="../vendor/toastr/toastr.min.js"></script>
+    @section Scripts {
+        <script src="../vendor/parsleyjs/js/parsley.min.js"></script>
+        <script src="../vendor/toastr/toastr.min.js"></script>
 
-    <script>
+        <script>
 
         $(function() {
             $('#Login').parsley();
@@ -95,6 +93,7 @@
             });
         }
 
-    </script>
+        </script>
+    }
 </body>
 </html>

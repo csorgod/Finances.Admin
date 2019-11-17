@@ -26,5 +26,11 @@ namespace Finances.Common.Data
             variable = 1,
             detached = 2
         }
+
+        public enum MessageType
+        {
+            SuccessMessage = 0,
+            ErrorMessage = 1
+        }
     }
 }

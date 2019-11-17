@@ -35,15 +35,15 @@ namespace Finances.Admin
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
-            }
+            //}
 
             var cultureInfo = new CultureInfo("pt-BR");
             cultureInfo.NumberFormat.CurrencySymbol = "R$";

@@ -1,0 +1,95 @@
+﻿@{
+    Layout = "~/Views/Shared/_Secondary_Layout.cshtml";
+}
+
+    <div class="card">
+        <div class="body">
+            <p class="lead">Criar uma conta</p>
+            <form id="SignUp" asp-action="Register" asp-controller="Auth" method="POST" class="form-auth-small m-t-20">
+
+                <div class="input-group form-group">
+                    <input type="text" class="form-control round" name="FirstName" id="FirstName" placeholder="Primeiro nome" required>
+                    <input type="text" class="form-control round" name="LastName" id="LastName" placeholder="Ultimo nome" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend round">
+                        <span class="input-group-text">
+                            <i class="icon-calendar"></i>
+                        </span>
+                    </div>
+                    <input data-provide="datepicker" data-date-autoclose="true" class="form-control round" data-date-format="dd/mm/yyyy" name="BirthDate" id="BirthDate" placeholder="Data de nascimento" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control round" name="TaxNumber" id="TaxNumber" placeholder="CPF" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="email" class="form-control round" name="Email" id="Email" placeholder="E-mail" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control round" name="Username" id="Username" placeholder="Usuário" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control round" name="Password" id="Password" placeholder="Senha" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-round btn-block">Registrar</button>
+            </form>
+            <div class="separator-linethrough">
+                <span>Ou</span>
+            </div>
+            <button class="btn btn-round btn-signin-social">
+                <i class="fa fa-facebook-official facebook-color">
+                </i> Entre com o Facebook
+            </button>
+            <button class="btn btn-round btn-signin-social">
+                <i class="fa fa-twitter twitter-color">
+                </i> Entre com o Twitter
+            </button>
+        </div>
+
+        @section Scripts {
+            <script src="~/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+            <script src="../vendor/parsleyjs/js/parsley.min.js"></script>
+            <script src="../vendor/toastr/toastr.min.js"></script>
+
+            <script>
+
+                $(function() {
+                    $('#SignUp').parsley();
+                });
+
+                $error = '@ViewData["error"]';
+
+                if($error != null && $error != ''){
+                    $context = 'error';
+                    $message = $error;
+                    $position = 'top-center';
+
+                    if ($context === '') {
+                        $context = 'info';
+                    }
+
+                    if($message === ''){
+                        $message = 'Tudo certo!';
+                    }
+
+                    if ($position === '') {
+                        $positionClass = 'toast-bottom-right';
+                    } else {
+                        $positionClass = 'toast-' + $position;
+                    }
+
+                    toastr.remove();
+                    toastr.options.closeButton = true;
+                    toastr[$context]($message, '', {
+                        positionClass: $positionClass
+                    });
+                }
+
+            </script>
+        }
+    </div>

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Finances.Core.Application.ViewModels
 {
-    public class UserAuthViewModel : BaseViewModel
+    public class UserAuth : BaseViewModel
     {
         public string JwtToken { get; set; }
         public UserData User { get; set; }

@@ -1,11 +1,13 @@
 ﻿using Finances.Common.Data;
 using Finances.Core.Application.ViewDatas;
 using Finances.Core.Application.ViewModels;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Finances.Admin.Controllers
@@ -119,9 +121,34 @@ namespace Finances.Admin.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public async Task<IActionResult> Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            var response = HttpContext.Response;
+
+            ErrorViewModel errorModel = default;
+
+            if (exceptionHandlerPathFeature?.Error is FileNotFoundException)
+                errorModel = new ErrorViewModel
+                {
+                    ErrorCode = 404,
+                    Message = "Página não encontrada",
+                    Description = "A pagina que você estava buscando não foi encontrada. O que deseja fazer?"
+                };
+            else if(exceptionHandlerPathFeature?.Error is Exception)
+                errorModel = new ErrorViewModel
+                {
+                    ErrorCode = 500,
+                    Message = "Erro interno do servidor",
+                    Description = "Houve um erro no servidor ao tentar tratar sua solicitação. O que deseja fazer?"
+                };
+
+            return View(errorModel);
+        }
+
+        public async Task<IActionResult> ReportAProblem()
+        {
+            return null;
         }
     }
 }
