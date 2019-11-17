@@ -1,6 +1,7 @@
 ﻿using Finances.Common.Data;
 using Finances.Core.Application.Services;
 using Finances.Core.Application.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -21,31 +22,37 @@ namespace Finances.Admin.Controllers
 
         public IActionResult Index()
         {
-            return View("Index");
+            if (HttpContext.Session.GetString("Username") != null)
+                ViewData["Username"] = HttpContext.Session.GetString("Username");
+
+            return View(nameof(Index));
         }
 
         [HttpPost]
         public async Task<IActionResult> Login([FromForm]SignIn model)
         {
-            if (!ModelState.IsValid)
-                return View("Index", model);
-
-            model.LoginMode = LoginMode.Admin;
-
             try
             {
                 var userAuth = await Service.Login(model);
 
-                if (userAuth.Payload == null)
+                if (userAuth.Success)
+                {   
+                    Storage.Store("UserJwt", userAuth.Payload.JwtToken);
+                    Storage.Store("UserLogged", JsonConvert.SerializeObject(userAuth.Payload.User));
+
+                    if(model.RememberUser == OnOrOff.On)
+                        HttpContext.Session.SetString("Username", userAuth.Payload.User.Username);
+
+                    return RedirectToAction("Index", "Home");
+                }
+                else if(userAuth.Payload == null)
                 {
                     RegisterMessage("Usuário e/ou senha incorretos", MessageType.ErrorMessage);
                     return RedirectToAction(nameof(Index));
                 }
 
-                Storage.Store("UserJwt", userAuth.Payload.JwtToken);
-                Storage.Store("UserLogged", JsonConvert.SerializeObject(userAuth.Payload.User));
-
-                return RedirectToAction("Index", "Home");
+                RegisterMessage("Houve um erro com o servidor. Por favor tente novamente mais tarde", MessageType.ErrorMessage);
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -56,26 +63,26 @@ namespace Finances.Admin.Controllers
 
         public async Task<IActionResult> ForgotPassword()
         {
-            return View("ForgotPassword");
+            return View(nameof(ForgotPassword));
         }
 
         public async Task<IActionResult> SignUp()
         {
-            return View("SignUp");
+            return View(nameof(SignUp));
         }
 
         [HttpPost]
         public async Task<IActionResult> Register([FromForm]SignUp model)
         {
             if (!ModelState.IsValid)
-                return View("SignUp", model);
+                return View(nameof(SignUp), model);
 
             var response = await Service.Register(model);
 
             if (response.Success)
                 return await Login(new SignIn { Username = model.Username, Password = model.Password });
 
-            RegisterMessage("", MessageType.ErrorMessage);
+            RegisterMessage("Houve um erro ao criar sua conta.", MessageType.ErrorMessage);
 
             return await SignUp();
         }

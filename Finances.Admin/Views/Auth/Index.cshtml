@@ -1,99 +1,47 @@
 ﻿@{
-    Layout = null;
+    Layout = "~/Views/Shared/_Secondary_Layout.cshtml";
+    ViewData["ViewName"] = "Login";
 }
-<!doctype html>
-<html lang="pt-br">
 
-<head>
-    <title>Finances - Login</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../vendor/animate-css/vivify.min.css">
-    <link rel="stylesheet" href="../vendor/toastr/toastr.min.css">
-    <link rel="stylesheet" href="../css/site.min.css">
-
-</head>
-
-<body class="theme-orange">
-    <div class="auth-main particles_js">
-        <div class="auth_div vivify popIn">
-            <div class="auth_brand">
-                <a class="navbar-brand" href="javascript:void(0);"><img src="..//images/icon.svg" width="30" height="30" class="d-inline-block align-top mr-2" alt="">Finances</a>
+<div class="card">
+    <div class="body">
+        <p class="lead">Acesso à plataforma</p>
+        <form id="Login" asp-action="Login" asp-controller="Auth" method="POST" class="form-auth-small m-t-20">
+            <div class="form-group">
+                <label for="username" class="control-label sr-only">Usuário</label>
+                <input type="text" class="form-control round" id="username" name="username" placeholder="Usuário" value="@ViewData["Username"]?.ToString()">
             </div>
-            <div class="card">
-                <div class="body">
-                    <p class="lead">Acesso à plataforma</p>
-                    <form id="Login" asp-action="Login" asp-controller="Auth" method="POST" class="form-auth-small m-t-20">
-                        <div class="form-group">
-                            <label for="username" class="control-label sr-only">Usuário</label>
-                            <input type="text" class="form-control round" id="username" name="username" placeholder="Usuário" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="control-label sr-only">Senha</label>
-                            <input type="password" class="form-control round" id="password" name="password" placeholder="Senha" required>
-                        </div>
-                        <div class="form-group clearfix">
-                            <label class="fancy-checkbox element-left">
-                                <input type="checkbox" name="keepLogged">
-                                <span>Manter logado</span>
-                            </label>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-round btn-block">LOGIN</button>
-                        <div class="bottom">
-                            <span class="helper-text m-b-10"><i class="fa fa-lock"></i> <a href="@Url.Action("ForgotPassword", "Auth")">Esqueceu a senha?</a></span>
-                            <span>Não possui conta? <a href="@Url.Action("SignUp", "Auth")">Registrar</a></span>
-                        </div>
-                    </form>
-                </div>
+            <div class="form-group">
+                <label for="password" class="control-label sr-only">Senha</label>
+                <input type="password" class="form-control round" id="password" name="password" placeholder="Senha">
             </div>
-        </div>
-        <div id="particles-js"></div>
+            <div class="form-group clearfix">
+                <label class="fancy-checkbox element-left">
+                    <input type="checkbox" id="RememberUser" name="RememberUser">
+                    <span>Lembrar usuário</span>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-round btn-block">LOGIN</button>
+            <div class="bottom">
+                <span class="helper-text m-b-10"><i class="fa fa-lock"></i> <a href="@Url.Action("ForgotPassword", "Auth")">Esqueceu a senha?</a></span>
+                <span>Não possui conta? <a href="@Url.Action("SignUp", "Auth")">Registrar</a></span>
+            </div>
+        </form>
     </div>
-    <!-- END WRAPPER -->
+</div>
 
-    @section Scripts {
-        <script src="../vendor/parsleyjs/js/parsley.min.js"></script>
-        <script src="../vendor/toastr/toastr.min.js"></script>
-
-        <script>
-
-        $(function() {
+@section Scripts {
+    <script src="../vendor/parsleyjs/js/parsley.min.js"></script>
+    <script src="../vendor/toastr/toastr.min.js"></script>
+    <script>
+        $(function () {
             $('#Login').parsley();
+
+            $('#username').attr('data-parsley-minlength', 5);
+            $('#username').attr('data-parsley-maxlength', 40);
+            $('#username').attr('data-parsley-required', true);
+
+            $('#password').attr('data-parsley-required', true);
         });
-
-        $error = '@ViewData["error"]';
-
-        if($error != null && $error != ''){
-            $context = 'error';
-            $message = $error;
-            $position = 'top-center';
-
-            if ($context === '') {
-                $context = 'info';
-            }
-
-            if($message === ''){
-                $message = 'Tudo certo!';
-            }
-
-            if ($position === '') {
-                $positionClass = 'toast-bottom-right';
-            } else {
-                $positionClass = 'toast-' + $position;
-            }
-
-            toastr.remove();
-            toastr.options.closeButton = true;
-            toastr[$context]($message, '', {
-                positionClass: $positionClass
-            });
-        }
-
-        </script>
-    }
-</body>
-</html>
+    </script>
+}

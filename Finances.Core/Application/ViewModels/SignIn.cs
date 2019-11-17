@@ -6,6 +6,7 @@ namespace Finances.Core.Application.ViewModels
     {
         public string Username { get; set; }
         public string Password { get; set; }
-        public LoginMode LoginMode { get; set; }
+        public OnOrOff RememberUser { get; set; }
+        public LoginMode LoginMode { get; set; } = LoginMode.Admin;
     }
 }

@@ -32,5 +32,11 @@ namespace Finances.Common.Data
             SuccessMessage = 0,
             ErrorMessage = 1
         }
+
+        public enum OnOrOff
+        {
+            Off = 0,
+            On = 1
+        }
     }
 }

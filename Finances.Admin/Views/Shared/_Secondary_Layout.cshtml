@@ -2,7 +2,7 @@
 <html lang="pt-br">
 
 <head>
-    <title>Oculux | Forgot Password</title>
+    <title>Finances - @ViewData["ViewName"]</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -10,11 +10,11 @@
     <meta name="author" content="GetBootstrap, design by: puffintheme.com">
 
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    
+
     <link rel="stylesheet" href="~/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/vendor/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/vendor/animate-css/vivify.min.css">
-
+    <link rel="stylesheet" href="~/vendor/toastr/toastr.min.css">
     <link rel="stylesheet" href="~/css/site.min.css">
 
 </head>
@@ -34,6 +34,62 @@
     <script src="~/bundles/vendorscripts.bundle.js"></script>
     <script src="~/bundles/mainscripts.bundle.js"></script>
     @RenderSection("Scripts", required: false)
+
+    <script>
+        $error = '@ViewData["error"]';
+        $success = '@ViewData["success"]';
+
+        if($error != null && $error != ''){
+            $context = 'error';
+            $message = $error;
+            $position = 'top-center';
+
+            if ($context === '') {
+                $context = 'error';
+            }
+
+            if($message === ''){
+                $message = 'Algo deu errado!';
+            }
+
+            if ($position === '') {
+                $positionClass = 'toast-bottom-right';
+            } else {
+                $positionClass = 'toast-' + $position;
+            }
+
+            toastr.remove();
+            toastr.options.closeButton = true;
+            toastr[$context]($message, '', {
+                positionClass: $positionClass
+            });
+        }
+        else if ($success != null && $success != '') {
+            $context = 'success';
+            $message = $success;
+            $position = 'top-center';
+
+            if ($context === '') {
+                $context = 'info';
+            }
+
+            if($message === ''){
+                $message = 'Tudo certo!';
+            }
+
+            if ($position === '') {
+                $positionClass = 'toast-bottom-right';
+            } else {
+                $positionClass = 'toast-' + $position;
+            }
+
+            toastr.remove();
+            toastr.options.closeButton = true;
+            toastr[$context]($message, '', {
+                positionClass: $positionClass
+            });
+        }
+    </script>
 </body>
 
 </html>

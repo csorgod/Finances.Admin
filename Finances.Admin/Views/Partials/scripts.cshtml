@@ -25,3 +25,58 @@
 <script src="~/js/pages/forms/form-wizard.js"></script>
 <script src="~/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script src="~/js/jquery.maskMoney.min.js" type="text/javascript"></script>
+<script>
+        $error = '@ViewData["error"]';
+        $success = '@ViewData["success"]';
+
+        if($error != null && $error != ''){
+            $context = 'error';
+            $message = $error;
+            $position = 'top-center';
+
+            if ($context === '') {
+                $context = 'error';
+            }
+
+            if($message === ''){
+                $message = 'Algo deu errado!';
+            }
+
+            if ($position === '') {
+                $positionClass = 'toast-bottom-right';
+            } else {
+                $positionClass = 'toast-' + $position;
+            }
+
+            toastr.remove();
+            toastr.options.closeButton = true;
+            toastr[$context]($message, '', {
+                positionClass: $positionClass
+            });
+        }
+        else if ($success != null && $success != '') {
+            $context = 'success';
+            $message = $success;
+            $position = 'top-center';
+
+            if ($context === '') {
+                $context = 'info';
+            }
+
+            if($message === ''){
+                $message = 'Tudo certo!';
+            }
+
+            if ($position === '') {
+                $positionClass = 'toast-bottom-right';
+            } else {
+                $positionClass = 'toast-' + $position;
+            }
+
+            toastr.remove();
+            toastr.options.closeButton = true;
+            toastr[$context]($message, '', {
+                positionClass: $positionClass
+            });
+        }
+</script>

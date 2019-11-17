@@ -1,6 +1,7 @@
 ﻿using Finances.Common.Data;
 using Finances.Common.Helpers;
 using Hanssens.Net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
@@ -35,16 +36,19 @@ namespace Finances.Admin.Controllers
 
         protected void AttachMessages()
         {
-            ViewData["error"] = TempData["error"];
-            ViewData["success"] = TempData["success"];
+            ViewData["error"] = HttpContext.Session.GetString("error");
+            ViewData["success"] = HttpContext.Session.GetString("success");
+
+            HttpContext.Session.Remove("error");
+            HttpContext.Session.Remove("success");
         }
 
         protected void RegisterMessage(string message, MessageType messageType)
         {
             if (messageType == MessageType.ErrorMessage)
-                TempData["error"] = message;
+                HttpContext.Session.SetString("error", message);
             else
-                TempData["success"] = message;
+                HttpContext.Session.SetString("success", message);
         }
     }
 }
