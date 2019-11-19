@@ -64,7 +64,7 @@
             </div>
 
             <div class="col-lg-6 col-md-6">
-                <div class="card-wrapper">
+                <div class="card-wrapper flip-left">
                     <div class="card s-widget-top">
                         <div class="front p-3 px-4">
                             <div>Dinheiro poupado</div>
@@ -87,37 +87,37 @@
         <div class="card">
             <div class="body">
                 <div class="form-group mb-4">
-                    <label class="d-block">Financials <span class="float-right">77% <i class="fa fa-long-arrow-up"></i></span></label>
+                    <label class="d-block">Cartão de crédito <span class="float-right">77% <i class="fa fa-long-arrow-up"></i></span></label>
                     <div class="progress progress-xxs">
                         <div class="progress-bar bg-azura" role="progressbar" aria-valuenow="77" aria-valuemin="0" aria-valuemax="100" style="width: 77%;"></div>
                     </div>
                 </div>
                 <div class="form-group mb-4">
-                    <label class="d-block">Time to Market <span class="float-right">50% <i class="fa fa-long-arrow-up"></i></span></label>
+                    <label class="d-block">Água <span class="float-right">50% <i class="fa fa-long-arrow-up"></i></span></label>
                     <div class="progress progress-xxs">
                         <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"></div>
                     </div>
                 </div>
                 <div class="form-group mb-4">
-                    <label class="d-block">Engagement <span class="float-right">23% <i class="fa fa-long-arrow-up"></i></span></label>
+                    <label class="d-block">Luz <span class="float-right">23% <i class="fa fa-long-arrow-up"></i></span></label>
                     <div class="progress progress-xxs">
                         <div class="progress-bar bg-green" role="progressbar" aria-valuenow="23" aria-valuemin="0" aria-valuemax="100" style="width: 23%;"></div>
                     </div>
                 </div>
                 <div class="form-group mb-4">
-                    <label class="d-block">Customers <span class="float-right">78% <i class="fa fa-long-arrow-up"></i></span></label>
+                    <label class="d-block">Internet <span class="float-right">78% <i class="fa fa-long-arrow-up"></i></span></label>
                     <div class="progress progress-xxs">
                         <div class="progress-bar bg-indigo" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" style="width: 78%;"></div>
                     </div>
                 </div>
                 <div class="form-group mb-4">
-                    <label class="d-block">Competitors <span class="float-right"> 33% <i class="fa fa-long-arrow-up"></i></span></label>
+                    <label class="d-block">Hobbies <span class="float-right"> 33% <i class="fa fa-long-arrow-up"></i></span></label>
                     <div class="progress progress-xxs">
                         <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" style="width: 33%;"></div>
                     </div>
                 </div>
                 <div class="form-group mb-2">
-                    <label class="d-block">Exit Strategy<span class="float-right">88% <i class="fa fa-long-arrow-up"></i></span></label>
+                    <label class="d-block">Outros <span class="float-right">88% <i class="fa fa-long-arrow-up"></i></span></label>
                     <div class="progress progress-xxs">
                         <div class="progress-bar bg-red" role="progressbar" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100" style="width: 88%;"></div>
                     </div>
@@ -129,29 +129,18 @@
     <div class="col-lg-3 col-md-6 col-sm-12">
         <div class="card">
             <div class="body">
-                <div class="row text-center">
+                <div id="expenses-pie" style="height: 300px"></div>
+            </div>
+        </div>
+    </div>
 
-                    <div class="col-lg-12 col-md-5">
-                        <div class="text-center">
-                            <input type="text" class="knob" value="77" data-width="68" data-height="68" data-thickness="0.1" data-bgColor="#383b40" data-fgColor="#17C2D7">
-                        </div>
-                        <label class="mb-0 mt-2">New Users</label>
-                        <h4 class="h4 mb-0 font-weight-bold text-cyan">225</h4>
-                    </div>
-
-                    <div class="col-12 col-md-2 col-lg-12">
-                        <hr class="mt-4 mb-4">
-                    </div>
-
-                    <div class="col-lg-12 col-md-5">
-                        <div class="text-center">
-                            <input type="text" class="knob" value="38" data-width="68" data-height="68" data-thickness="0.1" data-bgColor="#383b40" data-fgColor="#dc3545">
-                        </div>
-                        <label class="mb-0 mt-2">Return Visitors</label>
-                        <h4 class="h4 mb-0 font-weight-bold text-info">124</h4>
-                    </div>
-
-                </div>
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="header">
+                <h2>Entradas vs Saídas</h2>
+            </div>
+            <div class="body">
+                <div id="chart-in-vs-out"></div>
             </div>
         </div>
     </div>
@@ -191,5 +180,73 @@
                 });
             }
         });
+
+        c3.generate({
+            bindto: '#chart-in-vs-out',
+            data: {
+                columns: [
+                    ['Incomings', 13.9, 14.2, 15.7, 18.5, 21.9, 15.2, 17.0, 16.6, 24.2, 39.3, 31.6, 44.8],
+                    ['Outgoings', 7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 21.5, 23.3, 18.3, 13.9, 9.6]
+                ],
+                labels: true,
+                type: 'line',
+                colors: {
+                    'Incomings': '#5EBA00', // Green
+                    'Outgoings': '#DC3545' // Red
+                },
+                names: {
+                    'Incomings': 'Entradas',
+                    'Outgoings': 'Saídas'
+                }
+            },
+            axis: {
+                x: {
+                    type: 'category',
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+                },
+            },
+            legend: {
+                show: true
+            },
+            padding: {
+                bottom: 20,
+                top: 0
+            } 
+        });
+
+        c3.generate({
+        bindto: '#expenses-pie',
+        data: {
+            columns: [
+                ['data1', 63],
+                ['data2', 44],
+                ['data3', 12],
+                ['data4', 14]
+            ],
+            type: 'pie',
+            colors: {
+                'data1': '#007FFF',
+                'data2': '#DC3545',
+                'data3': '#5CB65F',
+                'data4': '#9367B4'
+            },
+            names: {
+                'data1': 'Cartão de crédito',
+                'data2': 'Água',
+                'data3': 'Luz',
+                'data4': 'Internet',
+            }
+        },
+        axis: {
+        },
+        legend: {
+            show: true
+        },
+        padding: {
+            bottom: 20,
+            top: 0
+        },
+    });
+
     </script>
 }
