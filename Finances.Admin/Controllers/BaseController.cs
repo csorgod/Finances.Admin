@@ -50,5 +50,10 @@ namespace Finances.Admin.Controllers
             else
                 HttpContext.Session.SetString("success", message);
         }
+
+        protected void CreateBreadCrumb(params string[] args)
+        {
+            ViewData["breadcrumb"] = args;
+        }
     }
 }

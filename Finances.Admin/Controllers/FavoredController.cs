@@ -1,51 +1,54 @@
 ﻿using Finances.Common.Data;
+using Finances.Core.Application.Services;
 using Finances.Core.Application.ViewDatas;
 using Finances.Core.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
+using static Finances.Common.Data.Enum;
 
 namespace Finances.Admin.Controllers
 {
     public class FavoredController : BaseController
     {
-        public FavoredController(IOptions<AppSettings> appSettings) : base(appSettings) { }
+        private readonly FavoredService Service;
 
-        public async Task<IActionResult> New()
+        public FavoredController(IOptions<AppSettings> appSettings) : base(appSettings)
         {
-            string[] breadcrumb = { "Favorecidos", "Novo" };
-            ViewData["breadcrumb"] = breadcrumb;
+            Service = new FavoredService(appSettings);
+        }
 
-            if (TempData["error"] != null)
-                ViewData["error"] = TempData["error"];
-
-            if (TempData["success"] != null)
-                ViewData["success"] = TempData["success"];
-
-            return View(new BaseViewData(UserLogged));
+        public async Task<IActionResult> New(FavoredViewModel newFavored = default)
+        {
+            CreateBreadCrumb("Favorecidos", "Novo");
+            
+            return View(new FavoredNewViewData(UserLogged, newFavored));
         }
         
         public async Task<IActionResult> Create(FavoredViewModel newFavored)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                TempData["error"] = "Houve um erro ao cadastrar o favorecido. Por favor, verifique os campos digitados e tente novamente";
-                return RedirectToAction("New");
-            }
+                newFavored.BelongToUserId = Guid.Parse(UserLogged.Id);
+                newFavored.CreatedAt = DateTime.Now;
 
-            newFavored.BelongToUserId = Guid.Parse(UserLogged.Id);
-            newFavored.CreatedAt = DateTime.Now;
+                var resp = await Service.CreateFavored(newFavored);
 
-            var resp = await Http.Post<FavoredViewModel>("favored", newFavored);
+                if (resp.Success)
+                {
+                    RegisterMessage(resp.Message, MessageType.SuccessMessage);
+                    return RedirectToAction("Favoreds", "Home");
+                }
+                
+                RegisterMessage(resp.Message, MessageType.ErrorMessage);
+                return RedirectToAction(nameof(New), newFavored);
 
-            if (resp.Success)
+            } catch
             {
-                TempData["success"] = resp.Message;
-                return RedirectToAction("Favoreds", "Home");
-            }
-            TempData["error"] = resp.Error;
-            return RedirectToAction("New");
+                RegisterMessage("Algo deu errado ao tentar cadastrar o favorecido.", MessageType.ErrorMessage);
+                return RedirectToAction(nameof(New), newFavored);
+            }           
         }
 
         public async Task<IActionResult> Show(Guid id)

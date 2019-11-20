@@ -77,7 +77,10 @@ namespace Finances.Common.Helpers
             HttpResponseMessage request = await client.SendAsync(requestContent);
             return ReadAndReturn<T>(request);
         }
-
+        //TODO: Tratar response corretamente. O retorno em caso de falha na validação do Fluent Validation é:
+        /*
+         {"errors":{"TaxNumber":["'Tax Number' deve ter no máximo 11 caracteres. Você digitou 14 caracteres."]},"title":"One or more validation errors occurred.","status":400,"traceId":"80000023-0003-dc00-b63f-84710c7967bb"}
+        */
         private JsonDefaultResponse<T> ReadAndReturn<T>(HttpResponseMessage request)
         {
             try
