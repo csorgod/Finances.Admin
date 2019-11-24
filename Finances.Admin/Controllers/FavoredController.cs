@@ -5,6 +5,7 @@ using Finances.Core.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Finances.Common.Data.Enum;
 
@@ -33,6 +34,8 @@ namespace Finances.Admin.Controllers
                 newFavored.BelongToUserId = Guid.Parse(UserLogged.Id);
                 newFavored.CreatedAt = DateTime.Now;
 
+                newFavored.TaxNumber = Regex.Replace(newFavored.TaxNumber, "[^0-9]", "");
+
                 var resp = await Service.CreateFavored(newFavored);
 
                 if (resp.Success)
@@ -53,35 +56,43 @@ namespace Finances.Admin.Controllers
 
         public async Task<IActionResult> Show(Guid id)
         {
-            string[] breadcrumb = { "Favorecidos", "Detalhes" };
+            CreateBreadCrumb("Favorecidos", "Detalhes");
 
-            ViewData["breadcrumb"] = breadcrumb;
+            try
+            {
+                var resp = await Service.GetFavoredToShow(id);
 
-            return View(new BaseViewData(UserLogged));
+                if (resp.Success)
+                    return View(new FavoredShowViewData(UserLogged, resp.Payload));
+
+                RegisterMessage("Houve um erro ao procurar o Favorecido: " + resp.Error, MessageType.ErrorMessage);
+                return RedirectToAction(nameof(HomeController.Favoreds), "Home");
+            } 
+            catch
+            {
+                RegisterMessage("Houve um erro ao encontrar o Favorecido. Por favor, tente novamente mais tarde.", MessageType.ErrorMessage);
+                return RedirectToAction(nameof(HomeController.Favoreds), "Home");
+            }
         }
         
         public async Task<IActionResult> Edit(Guid id)
         {
-            string[] breadcrumb = { "Favorecidos", "Editar" };
-
-            ViewData["breadcrumb"] = breadcrumb;
+            CreateBreadCrumb("Favorecidos", "Editar");
 
             try
             {
-                var resp = await Http.Get<FavoredToEditViewModel>("Favored/" + id);
+                var resp = await Service.GetFavoredToEdit(id);
 
-                if (!resp.Success)
-                {
-                    ViewData["error"] = "Houve um erro ao encontrar o Favorecido: " + resp.Error;
-                    return RedirectToAction("Favoreds", "Home");
-                }
+                if (resp.Success)
+                    return View(new FavoredEditViewData(UserLogged, resp.Payload));
 
-                return View(new FavoredEditViewData(UserLogged, resp.Payload));
+                RegisterMessage("Houve um erro ao procurar o Favorecido: " + resp.Error, MessageType.ErrorMessage);
+                return RedirectToAction(nameof(HomeController.Favoreds), "Home");
             }
             catch
             {
-                ViewData["error"] = "Houve um erro ao encontrar o Favorecido. Por favor, tente novamente mais tarde.";
-                return RedirectToAction("Favoreds", "Home");
+                RegisterMessage("Houve um erro ao encontrar o Favorecido. Por favor, tente novamente mais tarde.", MessageType.ErrorMessage);
+                return RedirectToAction(nameof(HomeController.Favoreds), "Home");
             }
         }
 

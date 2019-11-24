@@ -1,8 +1,9 @@
 <div class="row clearfix">
-    <div class="col-md-6">
+    <div class="col-md-12 col-lg-6">
         <div class="card">
             <div class="header">
-                <h2>Criar novo favorecido
+                <h2>
+                    Criar novo favorecido
                     <small>Ao adicionar um novo favorecido, é possível cadastrar ele em suas transferências, acompanhar as transações e gerar relatórios baseado nos dados registrados.</small>
                 </h2>
             </div>
@@ -12,13 +13,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="Name">Nome</label>
-                                <input type="text" name="Name" id="Name" class="form-control" value="@Model.Favored?.Name" required>
+                                <input type="text" name="Name" id="Name" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="TaxNumber">CPF/CNPJ</label>
-                                <input type="text" name="TaxNumber" id="TaxNumber" class="form-control" value="@Model.Favored?.TaxNumber" required>
+                                <input type="text" name="TaxNumber" id="TaxNumber" class="form-control" required>
                             </div>
                         </div>
                     </div>
@@ -26,25 +27,25 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="Account.Bank">Banco</label>
-                                <input type="number" maxlength="6" name="Account.Bank" id="Account.Bank" value="@Model.Favored?.Account.Bank" class="form-control">
+                                <input type="number" maxlength="6" name="Account.Bank" id="Account.Bank" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="Account.BankBranch">Agência</label>
-                                <input type="number" maxlength="4" name="Account.BankBranch" id="Account.BankBranch" value="@Model.Favored?.Account.BankBranch" class="form-control">
+                                <input type="number" maxlength="4" name="Account.BankBranch" id="Account.BankBranch" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="Account.BankAccount">Conta</label>
-                                <input type="number" maxlength="10" name="Account.BankAccount" id="Account.BankAccount" value="@Model.Favored?.Account.BankAccount" class="form-control">
+                                <input type="number" maxlength="10" name="Account.BankAccount" id="Account.BankAccount" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="Account.BankAccountDigit">Dígito da conta</label>
-                                <input type="number" maxlength="2" name="Account.BankAccountDigit" id="Account.BankAccountDigit" value="@Model.Favored?.Account.BankAccountDigit" class="form-control">
+                                <input type="number" maxlength="2" name="Account.BankAccountDigit" id="Account.BankAccountDigit" class="form-control">
                             </div>
                         </div>
                     </div>
